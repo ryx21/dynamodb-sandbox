@@ -40,5 +40,12 @@ The `--endpoint-url` flag tells the AWS CLI that you want to send requests to th
 }
 ```
 
-DynamoDB Boto3 client Reference:
+## Resources
+
+**NoSQL Workbench**: a very useful tool for visualising and debugging tables:
+* https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html
+
+Links to docs for Python libraries used:
 * https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html
+* https://github.com/svix/python-ksuid
+* https://click.palletsprojects.com/en/8.1.x/
