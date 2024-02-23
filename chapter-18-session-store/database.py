@@ -18,7 +18,7 @@ class SessionStoreTable:
         self.client = boto3.client('dynamodb', endpoint_url='http://localhost:8000')
         self.table_name = table_name
 
-    def create(self):
+    def create_table(self):
         """
         Creating a table is an async process - once the below runs, the table has
         an initial TableStatus of "CREATING". Once created, this will be set to
@@ -55,24 +55,24 @@ class SessionStoreTable:
                 ],
                 BillingMode='PAY_PER_REQUEST'
             )
+
+            # enable TTL actually does nothing in DynamoDB local
+            # in the cloud, this takes about 1 hour to take effect
+            self.client.update_time_to_live(
+                TableName=self.table_name,
+                TimeToLiveSpecification={
+                    'Enabled': True,
+                    'AttributeName': TTL
+                }
+            )
         except self.client.exceptions.ResourceInUseException:
             print(f"Table {self.table_name} already exists, not running setup.")
 
-        # enable TTL actually does nothing in DynamoDB local
-        # in the cloud, this takes about 1 hour to take effect
-        self.client.update_time_to_live(
-            TableName=self.table_name,
-            TimeToLiveSpecification={
-                'Enabled': True,
-                'AttributeName': TTL
-            }
-        )
-
-    def delete(self) -> dict:
+    def delete_table(self) -> dict:
         response = self.client.delete_table(TableName=self.table_name)
         return response
 
-    def describe(self) -> dict:
+    def describe_table(self) -> dict:
         """
         This is an eventually consistent query, so in reality we need to handle this.
         """
